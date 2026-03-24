@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Diesel">
+<meta name="theme-color" content="#185FA5">
+<title>Registro Diesel</title>
+</head>
+<body>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: -apple-system, Helvetica, Arial, sans-serif;
+  background: #EEF2F7;
+  color: #1a1a1a;
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+#app { max-width: 460px; margin: 0 auto; }
+.topbar { background: #185FA5; padding: 16px 16px 14px; }
+.topbar-row { display: flex; justify-content: space-between; align-items: center; }
+.topbar h1 { font-size: 18px; font-weight: 700; color: #fff; }
+.topbar .fecha { font-size: 12px; color: rgba(255,255,255,0.72); margin-top: 3px; }
+.badge { background: rgba(255,255,255,0.22); color: #fff; font-size: 11px; font-weight: 600; padding: 4px 11px; border-radius: 20px; }
+.pricebar { background: #0C447C; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+.pricebar label { font-size: 13px; color: rgba(255,255,255,0.80); white-space: nowrap; }
+.pricebar input {
+  width: 130px; font-size: 17px; font-weight: 700;
+  border: 1.5px solid rgba(255,255,255,0.35); border-radius: 8px;
+  padding: 7px 10px; background: rgba(255,255,255,0.14); color: #fff;
+  outline: none; -webkit-appearance: none;
+}
+.pricebar input:focus { border-color: rgba(255,255,255,0.75); }
+.pricebar input::placeholder { color: rgba(255,255,255,0.40); }
+.precio-txt { font-size: 12px; color: rgba(255,255,255,0.65); margin-left: auto; white-space: nowrap; }
+.stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 12px 12px 6px; }
+.stat { background: #fff; border-radius: 10px; padding: 10px 6px; text-align: center; border: 0.5px solid rgba(0,0,0,0.09); }
+.stat-lbl { font-size: 10px; color: #8a95a0; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+.stat-val { font-size: 18px; font-weight: 700; color: #1a1a1a; }
+.card { margin: 6px 12px 8px; background: #fff; border-radius: 14px; border: 0.5px solid rgba(0,0,0,0.09); padding: 16px; }
+.card-title { font-size: 11px; font-weight: 700; color: #8a95a0; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; }
+.frow { display: flex; gap: 10px; margin-bottom: 10px; }
+.fgrp { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.fgrp label { font-size: 12px; font-weight: 600; color: #5f6b7a; }
+.fgrp input {
+  font-size: 17px; padding: 11px 12px;
+  border: 1.5px solid rgba(0,0,0,0.14); border-radius: 9px;
+  background: #F4F7FB; color: #1a1a1a;
+  outline: none; -webkit-appearance: none; width: 100%;
+}
+.fgrp input:focus { border-color: #378ADD; background: #fff; }
+.monto-box {
+  background: #E6F1FB; border: 1px solid #B5D4F4; border-radius: 10px;
+  padding: 11px 14px; display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.monto-box span { font-size: 13px; color: #185FA5; font-weight: 500; }
+.monto-box strong { font-size: 22px; font-weight: 800; color: #0C447C; }
+.btn-reg {
+  width: 100%; padding: 15px; background: #185FA5; color: #fff;
+  border: none; border-radius: 10px; font-size: 16px; font-weight: 700;
+  cursor: pointer; -webkit-appearance: none; display: block;
+}
+.btn-reg:active { background: #0C447C; }
+.sec { margin: 0 12px 16px; }
+.sec-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 2px 8px; }
+.sec-head h2 { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+.btn-xl {
+  font-size: 12px; font-weight: 600; padding: 8px 14px;
+  background: #1D9E75; color: #fff; border: none; border-radius: 20px;
+  cursor: pointer; -webkit-appearance: none;
+}
+.btn-xl:active { background: #0F6E56; }
+.twrap { overflow-x: auto; border-radius: 10px; border: 0.5px solid rgba(0,0,0,0.09); background: #fff; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 300px; }
+thead tr { background: #F4F7FB; }
+thead th { padding: 10px; text-align: left; font-weight: 700; font-size: 11px; color: #8a95a0; border-bottom: 1px solid rgba(0,0,0,0.08); text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; }
+tbody tr { border-bottom: 0.5px solid rgba(0,0,0,0.07); }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 11px 10px; }
+.td-u { font-weight: 800; color: #185FA5; font-size: 14px; }
+.td-h { font-size: 11px; color: #9aa3ad; }
+.td-r { text-align: right; }
+.td-m { font-weight: 700; }
+.btn-del { background: none; border: none; cursor: pointer; color: #bbb; font-size: 18px; padding: 2px 8px; -webkit-appearance: none; }
+.btn-del:active { color: #A32D2D; }
+.empty { text-align: center; padding: 30px 16px; color: #9aa3ad; font-size: 13px; }
+.toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+  padding: 11px 22px; border-radius: 24px; font-size: 13px; font-weight: 600;
+  color: #fff; opacity: 0; transition: opacity 0.25s; pointer-events: none;
+  z-index: 999; white-space: nowrap; max-width: 88vw; background: #1D9E75;
+}
+.toast.err { background: #A32D2D; }
+.toast.on { opacity: 1; }
+</style>
+
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-row">
+      <div>
+        <h1>&#9981; Registro de Diesel</h1>
+        <div class="fecha" id="f-fecha"></div>
+      </div>
+      <span class="badge" id="f-badge">0 unidades</span>
+    </div>
+  </div>
+
+  <div class="pricebar">
+    <label>$ / litro:</label>
+    <input type="number" id="f-precio" placeholder="0.00" step="0.01" min="0" inputmode="decimal" autocomplete="off">
+    <span class="precio-txt" id="f-plbl">Sin precio</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-lbl">Unidades</div><div class="stat-val" id="s-u">0</div></div>
+    <div class="stat"><div class="stat-lbl">Litros</div><div class="stat-val" id="s-l">0</div></div>
+    <div class="stat"><div class="stat-lbl">Total $</div><div class="stat-val" id="s-p">$0</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Nueva carga</div>
+    <div class="frow">
+      <div class="fgrp">
+        <label>No. Unidad</label>
+        <input type="text" id="f-unidad" placeholder="Ej. 104" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+      </div>
+      <div class="fgrp">
+        <label>Litros</label>
+        <input type="number" id="f-litros" placeholder="0.00" step="0.01" min="0" inputmode="decimal" autocomplete="off">
+      </div>
+    </div>
+    <div class="monto-box">
+      <span>Monto calculado</span>
+      <strong id="f-monto">$0.00</strong>
+    </div>
+    <button class="btn-reg" id="btn-reg" type="button">+ Registrar carga</button>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head">
+      <h2>Registros del dia</h2>
+      <button class="btn-xl" id="btn-xl" type="button">Excel</button>
+    </div>
+    <div class="twrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Unidad</th><th>Hora</th>
+            <th class="td-r">Litros</th>
+            <th class="td-r">Monto</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="t-body">
+          <tr><td colspan="5" class="empty">Sin registros aun</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+var regs = [];
+
+function fmt(n, d) {
+  var dec = (d === undefined) ? 2 : d;
+  return Number(n).toLocaleString('en-US', {minimumFractionDigits: dec, maximumFractionDigits: dec});
+}
+function fmtLt(n) {
+  return Number(n).toLocaleString('en-US', {minimumFractionDigits: 3, maximumFractionDigits: 3});
+}
+function fmtPesos(n) {
+  return '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function horaAhora() {
+  var d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+function fechaHoy() {
+  var d = new Date();
+  var dias = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
+  var meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  return dias[d.getDay()] + ' ' + d.getDate() + ' de ' + meses[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function fechaCorta() {
+  var d = new Date();
+  return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
+}
+
+document.getElementById('f-fecha').innerHTML = fechaHoy();
+
+function getPrecio() {
+  var v = parseFloat(document.getElementById('f-precio').value);
+  return (isNaN(v) || v < 0) ? 0 : v;
+}
+
+function calcMonto() {
+  var p = getPrecio();
+  var lv = document.getElementById('f-litros').value;
+  var l = parseFloat(lv);
+  if (isNaN(l) || l < 0) l = 0;
+  document.getElementById('f-monto').innerHTML = fmtPesos(p * l);
+}
+
+function actualizarPrecioLabel() {
+  var p = getPrecio();
+  document.getElementById('f-plbl').innerHTML = p > 0 ? (fmtPesos(p) + ' / Lt') : 'Sin precio';
+  calcMonto();
+}
+
+document.getElementById('f-precio').addEventListener('input', actualizarPrecioLabel);
+document.getElementById('f-precio').addEventListener('change', actualizarPrecioLabel);
+document.getElementById('f-litros').addEventListener('input', calcMonto);
+document.getElementById('f-litros').addEventListener('change', calcMonto);
+
+function renderTabla() {
+  var tb = document.getElementById('t-body');
+  if (regs.length === 0) {
+    tb.innerHTML = '<tr><td colspan="5" class="empty">Sin registros aun</td></tr>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < regs.length; i++) {
+    var r = regs[i];
+    html += '<tr>';
+    html += '<td class="td-u">' + r.unidad + '</td>';
+    html += '<td class="td-h">' + r.hora + '</td>';
+    html += '<td class="td-r">' + fmtLt(r.litros) + ' Lt</td>';
+    html += '<td class="td-r td-m">' + fmtPesos(r.monto) + '</td>';
+    html += '<td><button class="btn-del" type="button" onclick="borrar(' + i + ')">x</button></td>';
+    html += '</tr>';
+  }
+  tb.innerHTML = html;
+}
+
+function renderStats() {
+  var tl = 0, tp = 0;
+  for (var i = 0; i < regs.length; i++) { tl += regs[i].litros; tp += regs[i].monto; }
+  document.getElementById('s-u').innerHTML = regs.length;
+  document.getElementById('s-l').innerHTML = fmtLt(tl);
+  document.getElementById('s-p').innerHTML = fmtPesos(tp);
+  document.getElementById('f-badge').innerHTML = regs.length + (regs.length === 1 ? ' unidad' : ' unidades');
+}
+
+function showToast(msg, err) {
+  var t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.className = 'toast' + (err ? ' err' : '') + ' on';
+  setTimeout(function() { t.className = 'toast' + (err ? ' err' : ''); }, 2600);
+}
+
+document.getElementById('btn-reg').addEventListener('click', function() {
+  var precio = getPrecio();
+  var unidad = document.getElementById('f-unidad').value.trim();
+  var litrosStr = document.getElementById('f-litros').value;
+  var litros = parseFloat(litrosStr);
+
+  if (precio <= 0) {
+    showToast('Define el precio por litro primero', true);
+    return;
+  }
+  if (!unidad || unidad === '') {
+    showToast('Ingresa el numero de unidad', true);
+    document.getElementById('f-unidad').focus();
+    return;
+  }
+  if (!litrosStr || isNaN(litros) || litros <= 0) {
+    showToast('Ingresa los litros cargados', true);
+    document.getElementById('f-litros').focus();
+    return;
+  }
+
+  regs.unshift({
+    unidad: unidad,
+    litros: litros,
+    precio: precio,
+    monto: Math.round(precio * litros * 100) / 100,
+    hora: horaAhora(),
+    fecha: fechaCorta()
+  });
+
+  renderTabla();
+  renderStats();
+  showToast('Unidad ' + unidad + ' registrada - ' + fmtLt(litros) + ' Lt', false);
+
+  document.getElementById('f-unidad').value = '';
+  document.getElementById('f-litros').value = '';
+  document.getElementById('f-monto').innerHTML = '$0.00';
+  document.getElementById('f-unidad').focus();
+});
+
+window.borrar = function(i) {
+  if (confirm('Eliminar registro de unidad ' + regs[i].unidad + '?')) {
+    regs.splice(i, 1);
+    renderTabla();
+    renderStats();
+  }
+};
+
+document.getElementById('btn-xl').addEventListener('click', function() {
+  if (regs.length === 0) {
+    showToast('No hay registros para exportar', true);
+    return;
+  }
+
+  var fecha = fechaCorta();
+  var precio = getPrecio();
+  var tl = 0, tp = 0;
+  for (var i = 0; i < regs.length; i++) { tl += regs[i].litros; tp += regs[i].monto; }
+
+  var data = [
+    ['REGISTRO DE DIESEL'],
+    ['Fecha:', fecha, '', 'Precio/litro:', precio],
+    ['Total litros:', tl, '', 'Total monto:', tp],
+    [''],
+    ['No. Unidad', 'Hora', 'Litros', 'Monto ($)', 'Precio/Lt']
+  ];
+
+  var sorted = regs.slice().reverse();
+  for (var j = 0; j < sorted.length; j++) {
+    var r = sorted[j];
+    data.push([r.unidad, r.hora, r.litros, r.monto, r.precio]);
+  }
+  data.push(['']);
+  data.push(['TOTALES', '', tl, tp, '']);
+
+  var wb = XLSX.utils.book_new();
+  var ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:14},{wch:10},{wch:12},{wch:14},{wch:12}];
+  XLSX.utils.book_append_sheet(wb, ws, 'Registros');
+  XLSX.writeFile(wb, 'diesel_' + fecha.replace(/\//g,'-') + '.xlsx');
+  showToast('Archivo Excel generado', false);
+});
+
+renderTabla();
+renderStats();
+</script>
+
+</body>
+</html>
